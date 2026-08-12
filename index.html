@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二年级华文《吃年糕》识字练习</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;background:#fff8ef;color:#4b3428}
+  .wrap{max-width:900px;margin:0 auto;padding:24px}
+  header{background:linear-gradient(135deg,#fff0c9,#ffe0b2);border-radius:22px;padding:28px;text-align:center;box-shadow:0 5px 18px #00000012}
+  h1{margin:0 0 8px;font-size:32px;color:#9b4d21}
+  .sub{font-size:17px}
+  .card{background:white;border-radius:18px;margin-top:20px;padding:22px;box-shadow:0 4px 15px #00000010}
+  h2{font-size:22px;color:#b65f2a;margin-top:0}
+  .chars{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .char{width:70px;height:70px;border:2px solid #f0c58c;border-radius:14px;background:#fffaf4;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:bold;cursor:pointer}
+  .char:hover{background:#fff0d9;transform:translateY(-2px)}
+  .question{margin:16px 0;padding:16px;background:#fffaf5;border-radius:14px}
+  .options{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  button{border:0;border-radius:12px;padding:10px 17px;font-size:16px;cursor:pointer;background:#f4d6ad;color:#5a3925}
+  button:hover{filter:brightness(.97)}
+  .correct{background:#bfe8c5!important}
+  .wrong{background:#ffc5c5!important}
+  input{font-size:18px;padding:9px 12px;border:2px solid #e8c99f;border-radius:10px;width:120px}
+  .result{font-size:20px;font-weight:bold;text-align:center;margin-top:18px}
+  .pinyin{font-size:14px;color:#a56b42;margin-top:4px}
+  .small{color:#806b5d;font-size:14px}
+  .reset{display:block;margin:18px auto 0;background:#c9793e;color:white}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🌸 二年级华文《吃年糕》识字练习</h1>
+  <div class="sub">第四单元《我们的文化》· 第二课《吃年糕》</div>
+</header>
+
+<div class="card">
+  <h2>一、认一认，读一读</h2>
+  <p class="small">点击汉字，可以看看拼音和词语。</p>
+  <div class="chars" id="chars"></div>
+  <div id="charInfo" style="text-align:center;margin-top:15px;font-size:19px;"></div>
+</div>
+
+<div class="card">
+  <h2>二、看拼音选汉字</h2>
+  <div id="quiz1"></div>
+</div>
+
+<div class="card">
+  <h2>三、汉字配词语</h2>
+  <div id="quiz2"></div>
+</div>
+
+<div class="card">
+  <h2>四、我会写</h2>
+  <div class="question">
+    <p>1. 春节时，我们会吃年______。（糕）</p>
+    <input id="write1" placeholder="请输入汉字">
+    <button onclick="checkWrite('write1','糕','w1')">检查</button>
+    <span id="w1"></span>
+  </div>
+  <div class="question">
+    <p>2. 新年有美好的愿______。（望）</p>
+    <input id="write2" placeholder="请输入汉字">
+    <button onclick="checkWrite('write2','望','w2')">检查</button>
+    <span id="w2"></span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>五、词语小练习</h2>
+  <div class="question">
+    <p>把正确的词语选出来：</p>
+    <div class="options">
+      <button onclick="choose(this,true)">希望</button>
+      <button onclick="choose(this,false)">希看</button>
+      <button onclick="choose(this,false)">希步</button>
+    </div>
+  </div>
+  <div class="question">
+    <p>“意思”怎么读？</p>
+    <div class="options">
+      <button onclick="choose(this,false)">yì sī</button>
+      <button onclick="choose(this,true)">yì si</button>
+      <button onclick="choose(this,false)">yì shì</button>
+    </div>
+  </div>
+  <div class="question">
+    <p>“意思”中的“思”应该读什么声调？</p>
+    <div class="options">
+      <button onclick="choose(this,false)">第一声</button>
+      <button onclick="choose(this,true)">轻声</button>
+      <button onclick="choose(this,false)">第四声</button>
+    </div>
+  </div>
+</div>
+
+<div class="result" id="score">练习完成后，这里会显示结果 😊</div>
+<button class="reset" onclick="location.reload()">重新练习</button>
+</div>
+
+<script>
+const data = [
+  ["春","chūn","春节"],["香","xiāng","香味"],["拜","bài","拜年"],
+  ["糕","gāo","年糕"],["定","dìng","一定"],["希","xī","希望"],
+  ["望","wàng","希望"],["业","yè","事业"],["步","bù","进步"],
+  ["意","yì","意思"],["思","sī","思念"],["够","gòu","足够"],["逗","dòu","逗笑"]
+];
+
+const chars=document.getElementById("chars");
+const info=document.getElementById("charInfo");
+data.forEach(([c,p,w])=>{
+  const d=document.createElement("div");
+  d.className="char";
+  d.textContent=c;
+  d.onclick=()=>info.innerHTML=`<b>${c}</b>　拼音：${p}　词语：${w}`;
+  chars.appendChild(d);
+});
+
+let score=0, answered=0;
+const q1=[
+ ["chūn",["春","香","思"],"春"],["bài",["拜","糕","步"],"拜"],
+ ["gāo",["糕","望","定"],"糕"],["xī",["希","业","意"],"希"],
+ ["bù",["步","逗","香"],"步"],["gòu",["够","思","春"],"够"]
+];
+const q1box=document.getElementById("quiz1");
+q1.forEach((q,i)=>{
+ let div=document.createElement("div"); div.className="question";
+ div.innerHTML=`<b>${i+1}. “${q[0]}”应该选哪个字？</b>`;
+ let opts=document.createElement("div"); opts.className="options";
+ q[1].forEach(x=>{
+   let b=document.createElement("button"); b.textContent=x;
+   b.onclick=()=>answer(b,x===q[2]); opts.appendChild(b);
+ });
+ div.appendChild(opts); q1box.appendChild(div);
+});
+
+const q2=[
+ ["糕",["年糕","年步","年思"],"年糕"],
+ ["拜",["拜年","拜步","拜思"],"拜年"],
+ ["望",["希望","希意","希香"],"希望"],
+ ["进",["进步","进糕","进逗"],"进步"]
+];
+const q2box=document.getElementById("quiz2");
+q2.forEach((q,i)=>{
+ let div=document.createElement("div"); div.className="question";
+ div.innerHTML=`<b>${i+1}. ${q[0]} 可以组成哪个词语？</b>`;
+ let opts=document.createElement("div"); opts.className="options";
+ q[1].forEach(x=>{
+   let b=document.createElement("button"); b.textContent=x;
+   b.onclick=()=>answer(b,x===q[2]); opts.appendChild(b);
+ });
+ div.appendChild(opts); q2box.appendChild(div);
+});
+
+function answer(btn,ok){
+  if(btn.parentElement.dataset.done) return;
+  btn.parentElement.dataset.done="1";
+  answered++;
+  if(ok){btn.classList.add("correct");score++;}
+  else btn.classList.add("wrong");
+  document.getElementById("score").textContent=`目前答对 ${score} 题，共完成 ${answered} 题 🌟`;
+}
+function choose(btn,ok){answer(btn,ok)}
+function checkWrite(id,ans,out){
+ const input=document.getElementById(id), span=document.getElementById(out);
+ if(input.value.trim()===ans){span.textContent=" ✓ 答对了！";span.style.color="green";}
+ else {span.textContent=" ✗ 再想一想！";span.style.color="crimson";}
+}
+</script>
+</body>
+</html>
